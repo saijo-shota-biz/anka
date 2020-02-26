@@ -27,10 +27,8 @@ export default class Confirm extends Vue {
 
   private copy() {
     const target = document.querySelector('#url');
-    if (target) {
-      document.getSelection().selectAllChildren(target);
-      document.execCommand("copy");
-    }
+    document.getSelection().selectAllChildren(target!);
+    document.execCommand("copy");
   }
 
 }
