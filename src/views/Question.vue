@@ -2,7 +2,7 @@
   <Layout :page-title="question.content">
     <v-form slot="content">
       <v-radio-group v-model="selected">
-        <v-radio v-for="select in question.selects" :key="select.id" :label="select.value" :value="select.id"></v-radio>
+        <v-radio :color="select.color" v-for="select in question.selects" :key="select.id" :label="select.value" :value="select.id"></v-radio>
       </v-radio-group>
     </v-form>
 
