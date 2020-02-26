@@ -1,30 +1,21 @@
 <template>
-  <Layout page-title="あんか">
-    <v-card>
+  <Layout :page-title="question.content">
+    <v-form slot="content">
+      <v-radio-group v-model="selected">
+        <v-radio v-for="select in question.selects" :key="select.id" :label="select.value" :value="select.id"></v-radio>
+      </v-radio-group>
+    </v-form>
 
-      <v-card-title>夏に遊ぶなら海 vs 山</v-card-title>
-
-      <v-card-text>
-        <v-form v-model="valid">
-          <v-radio-group v-model="selected">
-            <v-radio label="海" :value="1"></v-radio>
-            <v-radio label="山" :value="2"></v-radio>
-          </v-radio-group>
-          <v-textarea label="コメント" v-model="comment" outlined counter="100" rows="6" :rules="[v => (!v || v.length <= 100) || 'コメントは100文字までです。']"></v-textarea>
-        </v-form>
-      </v-card-text>
-      
-      <v-card-actions>
-        <v-btn block color="primary" :disabled="!valid" :to="{ name: 'Result', params: { id: 1 } }">回答する</v-btn>
-      </v-card-actions>
-
-    </v-card>
+    <v-btn slot="actions" block color="primary" @click="answer">回答する</v-btn>
   </Layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import Layout from '@/components/Layout.vue';
+import { getQuestion, addAnswer } from '@/firebase.ts';
+import { Question as Q } from '@/types.ts';
+import router from '@/router';
 
 @Component({
   components: {
@@ -36,11 +27,38 @@ export default class Question extends Vue {
   @Prop()
   private id!: string;
 
-  private selected: number = 1;
+  private selected: string = '';
 
-  private comment: string = '';
+  private question: Q|null = null;
 
-  private valid: boolean = true;
+  private answer() {
+    const answers: string[] = [];
+    if (this.question) {
+      this.question.answer.forEach((a) => answers.push(a));
+    }
+    answers.push(this.selected);
+    addAnswer(this.id, answers);
 
+
+    const json: string = localStorage.getItem('anka-ddb39') || '[]';
+    const ids: string[] = JSON.parse(json);
+    ids.push(this.id);
+    localStorage.setItem('anka-ddb39', JSON.stringify(ids));
+
+    router.push({ name: 'Result', params: { id: this.id } });
+  }
+
+  private async created() {
+    const json: string = localStorage.getItem('anka-ddb39') || '[]';
+    const ids: string[] = JSON.parse(json);
+    if (ids.includes(this.id)) {
+      router.push({ name: 'Result', params: { id: this.id } });
+      return;
+    }
+
+    const q = await getQuestion(this.id);
+    this.question = q;
+    this.selected = q.selects[0].id;
+  }
 }
 </script>

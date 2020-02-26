@@ -1,47 +1,44 @@
 <template>
-  <Layout page-title="あんか結果">
-    <pie-chart :chart-data="chartData" :chart-options="chartOption"></pie-chart>
-    <v-subheader>コメント</v-subheader>
+  <Layout :page-title="title + '結果'">
+    <pie ref="chart" slot="content"></pie>
   </Layout>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Layout from '@/components/Layout.vue';
-import PieChart from '@/components/PieChart.vue';
 import Chart from 'chart.js';
-import { draw } from 'patternomaly';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { getQuestion, getQuestionDocRef } from '@/firebase.ts';
+import { Question } from '@/types';
+import { Pie } from 'vue-chartjs';
 
 Chart.plugins.register(ChartDataLabels);
+
+const getData = (question: Question) =>
+  question.selects.map((select) => question.answer.filter((id) => id === select.id).length);
 
 @Component({
   components: {
     Layout,
-    PieChart,
+    Pie,
   },
 })
 export default class Result extends Vue {
-  private chartData: Chart.ChartData = {
-    labels: ['海', '山'],
-    datasets: [{
-      data: [30, 20],
-      backgroundColor: [
-        draw('diagonal', 'lightblue'),
-        draw('diagonal', 'lightgreen'),
-        draw('diagonal', 'lightyellow'),
-        draw('diagonal', 'lightpink'),
-        draw('diagonal', 'lightgray'),
-      ],
-    }],
-  };
+
+  @Prop()
+  private id!: string;
+
+  private title: string = '';
+
+  private chartData: Chart.ChartData = {};
 
   private chartOption: Chart.ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     legend: {
       labels: {
-        fontSize: 10,
+        fontSize: 20,
       },
     },
     plugins: {
@@ -58,6 +55,31 @@ export default class Result extends Vue {
       },
     },
   };
+
+  private async created() {
+    const question = await getQuestion(this.id);
+
+    this.title = question.content;
+    this.chartData = {
+      labels: question.selects.map((select) => select.value),
+      datasets: [{
+        data: getData(question),
+        backgroundColor: question.selects.map((select) => select.color),
+      }],
+    };
+
+    const that: Result = this;
+    getQuestionDocRef(this.id)
+      .onSnapshot((docSnap) => {
+        const doc = docSnap.data() as Question;
+        if (that.chartData.datasets) {
+          that.chartData.datasets[0].data = getData(doc);
+          if (that.$refs.chart && (that.$refs.chart as Pie).renderChart) {
+            (that.$refs.chart as Pie).renderChart(that.chartData, that.chartOption);
+          }
+        }
+      });
+  }
 }
 </script>
 

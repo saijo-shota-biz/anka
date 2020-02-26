@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Question from '../views/Question.vue';
 import Result from '../views/Result.vue';
+import Confirm from '../views/Confirm.vue';
 
 Vue.use(VueRouter);
 
@@ -14,9 +15,10 @@ const routes = [
     component: Home,
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login,
+    path: '/confirm/:id',
+    name: 'Confirm',
+    component: Confirm,
+    props: true,
   },
   {
     path: '/question/:id',
