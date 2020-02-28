@@ -12,6 +12,14 @@
     ],
     "rewrites": [
       {
+        "source": "/question/*",
+        "function": "questionpage"
+      },
+      {
+        "source": "/ogp/questionimg/*",
+        "function": "questionimg"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
