@@ -28,6 +28,22 @@ export function getQuestion(id: string): Promise<Question> {
     .then((doc) => doc.data() as Question);
 }
 
+export function getQuestions(ids: string[]): Promise<Question[]> {
+  const db = firebase.firestore();
+  return db.collection(QUESTIONS).get()
+    .then((querySnapShot) => {
+      const questions: Question[] = [];
+      querySnapShot.forEach((doc) => {
+        if (ids.includes(doc.id)) {
+          const question = doc.data() as Question;
+          question.id = doc.id;
+          questions.push(question);
+        }
+      });
+      return questions;
+    });
+}
+
 export function addAnswer(questionId: string, answer: string[]) {
   const db = firebase.firestore();
   db.collection(QUESTIONS).doc(questionId).update({answer});

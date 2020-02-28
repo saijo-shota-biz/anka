@@ -1,5 +1,5 @@
 <template>
-  <Layout :page-title="title + '結果'">
+  <Layout :page-title="title">
     <pie ref="chart" slot="content"></pie>
   </Layout>
 </template>

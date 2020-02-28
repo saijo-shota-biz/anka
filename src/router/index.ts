@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
+import List from '../views/List.vue';
+import Create from '../views/Create.vue';
 import Question from '../views/Question.vue';
 import Result from '../views/Result.vue';
 import Confirm from '../views/Confirm.vue';
@@ -11,8 +11,13 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'List',
+    component: List,
+  },
+  {
+    path: '/create',
+    name: 'Create',
+    component: Create,
   },
   {
     path: '/confirm/:id',

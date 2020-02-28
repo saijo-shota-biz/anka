@@ -13,3 +13,7 @@ export function getSelectionColor(index: number): string {
     '#FFA726',
  ][index];
 }
+
+export const MY_QUESTIONS_KEY: string = 'anka-ddb39-myquestions';
+
+export const MY_ANSERS_KEY: string = 'anka-ddb39-myanswers';

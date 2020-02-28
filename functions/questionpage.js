@@ -56,18 +56,18 @@ const createHtml = (content, questionId) => {
     <link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css>
 
-    <link href=/css/chunk-vendors.06ba1b50.css rel=preload as=style>
-    <link href=/js/app.a2e93f2f.js rel=preload as=script>
-    <link href=/js/chunk-vendors.2bcb2117.js rel=preload as=script>
-    <link href=/css/chunk-vendors.06ba1b50.css rel=stylesheet>
+    <link href=/css/chunk-vendors.e48054b8.css rel=preload as=style>
+    <link href=/js/app.60f66db2.js rel=preload as=script>
+    <link href=/js/chunk-vendors.b56cd66b.js rel=preload as=script>
+    <link href=/css/chunk-vendors.e48054b8.css rel=stylesheet>
 
   </head>
   <body>
     <noscript></noscript>
     <div id=app></div>
 
-    <script src=/js/chunk-vendors.2bcb2117.js></script>
-    <script src=/js/app.a2e93f2f.js></script>
+    <script src=/js/chunk-vendors.b56cd66b.js></script>
+    <script src=/js/app.60f66db2.js></script>
 
   </body>
 </html>

@@ -6,7 +6,7 @@
       </v-radio-group>
     </v-form>
 
-    <v-btn slot="actions" block color="primary" @click="answer">回答する</v-btn>
+    <v-btn slot="actions" block color="primary" @click="answer">答える</v-btn>
   </Layout>
 </template>
 
@@ -16,6 +16,7 @@ import Layout from '@/components/Layout.vue';
 import { getQuestion, addAnswer } from '@/firebase.ts';
 import { Question as Q } from '@/types.ts';
 import router from '@/router';
+import { MY_ANSERS_KEY } from '@/helpers.ts';
 
 @Component({
   components: {
@@ -40,16 +41,16 @@ export default class Question extends Vue {
     addAnswer(this.id, answers);
 
 
-    const json: string = localStorage.getItem('anka-ddb39') || '[]';
+    const json: string = localStorage.getItem(MY_ANSERS_KEY) || '[]';
     const ids: string[] = JSON.parse(json);
     ids.push(this.id);
-    localStorage.setItem('anka-ddb39', JSON.stringify(ids));
+    localStorage.setItem(MY_ANSERS_KEY, JSON.stringify(ids));
 
     router.push({ name: 'Result', params: { id: this.id } });
   }
 
   private async created() {
-    const json: string = localStorage.getItem('anka-ddb39') || '[]';
+    const json: string = localStorage.getItem(MY_ANSERS_KEY) || '[]';
     const ids: string[] = JSON.parse(json);
     if (ids.includes(this.id)) {
       router.push({ name: 'Result', params: { id: this.id } });
